@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reddit-credibility-checker"
+version = "0.1.0"
+description = "Local-first MVP for validating historical stock claims made by Reddit users."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "Jinja2>=3.1.4",
+    "openai>=1.40.0",
+    "pandas>=2.2.0",
+    "praw>=7.7.1",
+    "pydantic>=2.7.0",
+    "python-dotenv>=1.0.1",
+    "yfinance>=0.2.40",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

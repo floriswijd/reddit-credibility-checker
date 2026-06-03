@@ -1,0 +1,30 @@
+# Reddit Credibility Report: u/{{ username }}
+
+This report is not investment advice. It only compares historical Reddit claims against later market data.
+
+## Summary
+
+- Credibility score: {{ scores.credibility_score }}/100
+- Evaluated claims: {{ scores.evaluated_claims }}
+- Skipped claims: {{ scores.skipped_claims }}
+- Hit rate score: {{ scores.hit_rate_score }}/100
+- Average excess return score: {{ scores.average_excess_return_score }}/100
+- Specificity score: {{ scores.specificity_score }}/100
+- Sample size confidence: {{ scores.sample_size_confidence }}/100
+- Red flag adjustment: {{ scores.red_flag_adjustment }}/100
+
+## Validated Claims
+
+| Date | Subreddit | Ticker | Direction | Window | Excess Return | Hit | Claim |
+|---|---:|---:|---:|---:|---:|---:|---|
+{% for claim in claims if claim.validation_status == "validated" -%}
+| {{ claim.created_at.date() }} | r/{{ claim.subreddit }} | {{ claim.ticker }} | {{ claim.direction }} | {{ claim.evaluation_window_days }}d | {{ "%.2f"|format((claim.selected_excess_return or 0) * 100) }}% | {{ claim.selected_hit }} | {{ claim.claim_text | replace("\n", " ") }} |
+{% endfor %}
+
+## Skipped Claims
+
+| Date | Ticker | Reason | Claim |
+|---|---:|---|---|
+{% for claim in claims if claim.validation_status == "skipped" -%}
+| {{ claim.created_at.date() }} | {{ claim.ticker or "" }} | {{ claim.skipped_reason or "not validated" }} | {{ claim.claim_text | replace("\n", " ") }} |
+{% endfor %}
