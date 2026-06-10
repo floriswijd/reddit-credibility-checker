@@ -1,12 +1,17 @@
+import os
 import time
 from datetime import datetime, timezone
 
 import requests
+from dotenv import load_dotenv
 from requests.exceptions import RequestException, Timeout
 
 
-USERNAME = "Where_is_Gabriel"
-SUBREDDIT = "wallstreetbets"
+load_dotenv()
+
+USERNAME = os.getenv("REDDIT_TEST_USERNAME", "Where_is_Gabriel")
+SUBREDDIT = os.getenv("REDDIT_TEST_SUBREDDITS", "wallstreetbets").split(",")[0].strip()
+SIZE_PER_SUBREDDIT = int(os.getenv("REDDIT_TEST_SIZE_PER_SUBREDDIT", "10"))
 
 BASE_URLS = {
     "comments": "https://api.pullpush.io/reddit/search/comment/",
@@ -96,7 +101,7 @@ def main():
         kind="submissions",
         username=USERNAME,
         subreddit=SUBREDDIT,
-        size=10,
+        size=SIZE_PER_SUBREDDIT,
     )
 
     print(f"\nAantal submissions gevonden: {len(submissions)}\n")
@@ -108,7 +113,7 @@ def main():
         kind="comments",
         username=USERNAME,
         subreddit=SUBREDDIT,
-        size=10,
+        size=SIZE_PER_SUBREDDIT,
     )
 
     print(f"\nAantal comments gevonden: {len(comments)}\n")

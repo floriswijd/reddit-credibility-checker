@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = PROJECT_ROOT / "src"
@@ -14,9 +17,15 @@ from reddit_credibility.normalizer import normalize_items
 from reddit_credibility.pullpush_client import fetch_user_activity
 
 
-USERNAME = "Where_is_Gabriel"
-SUBREDDITS = ["wallstreetbets"]
-SIZE_PER_SUBREDDIT = 10
+load_dotenv()
+
+USERNAME = os.getenv("REDDIT_TEST_USERNAME", "Where_is_Gabriel")
+SUBREDDITS = [
+    subreddit.strip()
+    for subreddit in os.getenv("REDDIT_TEST_SUBREDDITS", "wallstreetbets").split(",")
+    if subreddit.strip()
+]
+SIZE_PER_SUBREDDIT = int(os.getenv("REDDIT_TEST_SIZE_PER_SUBREDDIT", "10"))
 
 
 def preview_text(value: str, limit: int = 240) -> str:
@@ -26,6 +35,10 @@ def preview_text(value: str, limit: int = 240) -> str:
 
 def main() -> None:
     slug = utc_now_slug()
+
+    print("Test username:", USERNAME)
+    print("Test subreddits:", ", ".join(SUBREDDITS))
+    print("Size per subreddit:", SIZE_PER_SUBREDDIT)
 
     activity = fetch_user_activity(
         username=USERNAME,
